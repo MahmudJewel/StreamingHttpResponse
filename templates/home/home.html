@@ -2,6 +2,36 @@
 
 {% block content %}
 <section>
-    This is home page-dj-4.2
+    <div >
+        <h2 class="text-center">StreamingHttpResponse</h2>
+        <p>Testing</p>
+    </div>
+    <div id="data-list">
+        {% for dt in data %}
+        {{dt.number}} &ensp;
+        {% endfor %}
+    </div>
 </section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Function to handle streaming data
+        function handleStreamingData(event) {
+            var data = JSON.parse(event.data);  // Parse JSON data
+            $('#data-list').append(data.number + '&ensp;');  // Update UI with data
+        }
+    
+        // Establish EventSource connection
+        var source = new EventSource('/');
+    
+        // Listen for streaming data events
+        source.addEventListener('message', handleStreamingData);
+    
+        // Handle errors
+        source.addEventListener('error', function(event) {
+            console.error('Error:', event);
+        });
+    });
+    </script>
 {% endblock %}

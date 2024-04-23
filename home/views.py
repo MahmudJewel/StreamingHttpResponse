@@ -3,12 +3,25 @@ import random
 import schedule
 import threading
 import time
+import json
+from django.http import StreamingHttpResponse
 from .models import TestModel
 # Create your views here.
 
 def home(request):
     template_name = 'home/home.html'
-    return render(request, template_name)
+    data = TestModel.objects.all()
+    context = {
+        'data': data,
+    }
+    return render(request, template_name, context)
+
+def get_data_dynamically(request):
+      def get_object():
+        queryset = TestModel.objects.all()
+        for item in queryset.iterator():
+             yield json.dumps({'number':item.number})
+      return StreamingHttpResponse(get_object(),content_type='application/json')
 
 def save_test_model():
     num = random.random()
