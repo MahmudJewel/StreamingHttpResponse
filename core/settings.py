@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
     # installed app
     'home',
+
     # library
+    'schedule', #python schedules
     
 ]
 
