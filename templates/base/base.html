@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django-4.2</title>
+
+    <!-- font awesome 5.15-->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" 
+        crossorigin="anonymous" />
+
+    <!-- boostrap ==============  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- custom css ================  -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        /* body{
+            background-color: red;
+        } */
+    </style>
+
+</head>
+
+<body>
+
+    <!-- navigation ===================  -->
+    {% include 'base/navbar.html' %}
+
+    <!-- notification messages ============== -->
+    <div style="text-align: center">
+    {% if messages %}
+        <br /><br /><br />
+        {% for msg in messages %}
+        <div class="alert alert-{{msg.tags}}">{{msg}}</div>
+        {% endfor %} 
+    {% endif %}
+    </div>
+    <br /><br /><br />
+
+  <!-- content ===================  -->
+    <div class="container" style="min-height: 100vh;">
+        {% block content %} {% endblock %}
+    </div>
+
+    <!-- footer ==================  -->
+    {% include 'base/footer.html' %}
+
+
+
+    <!-- cusom js =================== -->
+    <script type="text/javascript" src="{% static 'js/main.js' %}" ></script>
+    <!-- bootstrap =====================  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>
