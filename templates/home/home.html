@@ -6,32 +6,63 @@
         <h2 class="text-center">StreamingHttpResponse</h2>
         <p>Testing</p>
     </div>
-    <div id="data-list">
+    <hr>
+    <h2>Django-data</h2>
+    <div>
         {% for dt in data %}
         {{dt.number}} &ensp;
         {% endfor %}
     </div>
+
+    <br><br>
+    <h2>================</h2>
+    <div id="progress"></div>
+    <div id="data"></div>
+
+    <br><br>
+    <h2>StreamingHttpResponse data</h2>
+    <div class="container">
+        <ul id="data-list"></ul>
+    </div>
+
+    <br><br>
+    <h2>Demo data</h2>
+    <div id="data-container"></div>
+
 </section>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- ====================== -->
+
+
 <script>
-    $(document).ready(function() {
-        // Function to handle streaming data
-        function handleStreamingData(event) {
-            var data = JSON.parse(event.data);  // Parse JSON data
-            $('#data-list').append(data.number + '&ensp;');  // Update UI with data
-        }
-    
-        // Establish EventSource connection
-        var source = new EventSource('/');
-    
-        // Listen for streaming data events
-        source.addEventListener('message', handleStreamingData);
-    
-        // Handle errors
-        source.addEventListener('error', function(event) {
-            console.error('Error:', event);
+    function updateData() {
+      fetch('/my_view')  // Replace with your actual URL
+        .then(response => response.text())
+        .then(data => {
+          // Update your UI element with the received data
+          document.getElementById('data-container').textContent = data;
         });
-    });
-    </script>
+    }
+  
+    // setInterval(updateData, 5000); // Update every 5 seconds
+  </script>
+
+<script>
+    function handleStreamingData() {
+        fetch('/stream-data')
+         .then(response => response.text())
+         .then(data => {
+            // var dt = JSON.parse(data);
+            // console.log('=========>',data);
+            document.getElementById('data-list').innerHTML = data;
+            data.forEach(function(jsonData){
+                var number = jsonData.number;
+                console.log('==============>',number);
+            });
+          });
+            // var data = JSON.parse(event);  // Parse JSON data
+            // $('#data-list').append(event + '&ensp;');  // Update UI with data
+        }
+    setInterval(handleStreamingData, 3000);
+</script>
 {% endblock %}
