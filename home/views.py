@@ -17,25 +17,48 @@ def home(request):
     }
     return render(request, template_name, context)
 
+# def stream_data(request):
+#     def stream_data_generator():
+#         queryset = TestModel.objects.all()
+#         data = []
+#         for obj in queryset:
+#             id = obj.id
+#             number = str(obj.number)
+#             data.append({'id': id, 'number': number})
+#             # json_data = json.dumps(data)
+#             # # print('ok ==>', obj.number)
+#             # yield json_data
+#         json_data = json.dumps(data)
+#         yield json_data
+#         # data = list(TestModel.objects.values())
+#         # data = JsonResponse(data, safe=False)
+#         # yield data
+
+#     response = StreamingHttpResponse(stream_data_generator(), content_type='text/event-stream')
+#     # response = StreamingHttpResponse(stream_data_generator(), content_type="application/json")
+#     return response
+
+
+# text/event-stream
+# def stream_data(request):
+#     def stream_data_generator():
+#         queryset = TestModel.objects.all()
+#         for obj in queryset:
+#             yield json.dumps({'id': obj.id, 'number': str(obj.number)})
+
+#     response = StreamingHttpResponse(stream_data_generator(), content_type="text/event-stream")
+#     response['Cache-Control'] = 'no-cache'
+#     return response
+
+# json===============
 def stream_data(request):
     def stream_data_generator():
         queryset = TestModel.objects.all()
-        data = []
         for obj in queryset:
-            id = obj.id
-            number = str(obj.number)
-            data.append({'id': id, 'number': number})
-            # json_data = json.dumps(data)
-            # # print('ok ==>', obj.number)
-            # yield json_data
-        json_data = json.dumps(data)
-        yield json_data
-        # data = list(TestModel.objects.values())
-        # data = JsonResponse(data, safe=False)
-        # yield data
+            yield json.dumps({'id': obj.id, 'number': str(obj.number)})
 
-    # response = StreamingHttpResponse(stream_data_generator(), content_type='text/event-stream')
-    response = StreamingHttpResponse(stream_data_generator(), content_type="application/json")
+    response = StreamingHttpResponse(stream_data_generator(), content_type='application/json')
+    response['Cache-Control'] = 'no-cache'
     return response
 
 def my_view(request):

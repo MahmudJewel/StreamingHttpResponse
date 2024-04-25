@@ -7,19 +7,19 @@
         <p>Testing</p>
     </div>
     <hr>
-    <h2>Django-data</h2>
+    <!-- <h2>Django-data</h2>
     <div>
         {% for dt in data %}
         {{dt.number}} &ensp;
         {% endfor %}
-    </div>
+    </div> -->
 
-    <br><br>
+    <!-- <br><br>
     <h2>================</h2>
     <div id="progress"></div>
-    <div id="data"></div>
+    <div id="data"></div> -->
 
-    <br><br>
+    <!-- <br><br>
     <h2>StreamingHttpResponse data</h2>
     <div class="container">
         <ul id="data-list"></ul>
@@ -27,14 +27,212 @@
 
     <br><br>
     <h2>Demo data</h2>
-    <div id="data-container"></div>
+    <div id="data-container"></div> -->
+
+    <!-- predefined data/text -->
+    <!-- <h2>Streaming Data from Server</h2>
+    <div id="progress"></div>
+    <div id="data"></div> -->
+
+     <!-- json -->
+     <h2>Streaming Data from Server</h2>
+     <div id="data-list"></div>
 
 </section>
 
 <!-- ====================== -->
 
 
+
+<!-- ===== predefined data/text =============== -->
+<!-- <script>
+    let xmlhttp = new XMLHttpRequest();
+    function log(msg) {
+        console.log(msg);
+    }
+    function reqListener () {
+        log('our js register');
+    }
+
+    function updateProgress (oEvent) {
+        log('inside progress');
+        log(oEvent);
+        log(oEvent.currentTarget.responseText.length);
+        if (oEvent.lengthComputable) {
+            let percentComplete = (oEvent.loaded / oEvent.total) * 100;
+            document.getElementById('progress').innerText = percentComplete + ' %'
+          } else {
+            // Unable to compute progress information since the total size is unknown
+        }
+        let p = document.createElement('p');
+        let text = document.createTextNode('start new chunk: ' +  oEvent.target.responseText);
+        console.log('text ==========>',typeof(oEvent.target.responseText));
+        p.appendChild(text);
+        document.getElementById('data').appendChild(p);
+    }
+    url = '{% url "stream_data" %}';
+
+    xmlhttp.addEventListener('load', reqListener);
+    xmlhttp.addEventListener('progress', updateProgress, false);
+    xmlhttp.open("get", url, true);
+    xmlhttp.send();
+</script> -->
+
+
 <script>
+    function handleStreamingData() {
+        fetch('/stream-data')
+         .then(response => response.text())
+         .then(data => {
+            // var dt = JSON.parse(data);
+            console.log('=========>',typeof(data));
+            document.getElementById('data-list').innerHTML = data;
+            // data.forEach(function(jsonData){
+            //     var number = jsonData.number;
+            //     console.log('==============>',number);
+            // });
+          });
+            // var data = JSON.parse(event);  // Parse JSON data
+            // $('#data-list').append(event + '&ensp;');  // Update UI with data
+        }
+    setInterval(handleStreamingData, 3000);
+</script>
+
+
+
+<!-- =================================== -->
+<!-- <script>
+    var eventSource = new EventSource("{% url 'stream_data' %}");
+
+// Initialize an array to store all the data
+var allData = [];
+var lastIndex = 0; // Track the index of the last item displayed
+
+eventSource.onmessage = function(event) {
+    var newData = JSON.parse(event.data);
+    console.log(newData);
+
+    // Append the new data to the existing array
+    allData = allData.concat(newData);
+
+    // Update the HTML to display all the data
+    updateHTML(allData);
+};
+
+// Function to update the HTML with all the data
+function updateHTML(data) {
+    var dataList = document.getElementById("data-list");
+
+    // Iterate over the data starting from the last index displayed
+    for (var i = lastIndex; i < data.length; i++) {
+        var listItem = document.createElement("li");
+        listItem.textContent = "ID: " + data[i].id + ", Number: " + data[i].number;
+        dataList.appendChild(listItem);
+    }
+
+    // Update the index of the last item displayed
+    lastIndex = data.length;
+}
+
+</script> -->
+
+<!-- <script>
+    var eventSource = new EventSource("{% url 'stream_data' %}");
+
+// Initialize an array to store all the data
+var allData = [];
+
+eventSource.onmessage = function(event) {
+    var newData = JSON.parse(event.data);
+    console.log(newData);
+
+    // Append the new data to the existing array
+    allData = allData.concat(newData);
+
+    // Update the HTML to display all the data
+    updateHTML(allData);
+};
+
+// Function to update the HTML with all the data
+function updateHTML(data) {
+    var dataList = document.getElementById("data-list");
+    dataList.innerHTML = ""; // Clear the existing list
+
+    // Iterate over the data and add each item to the list
+    data.forEach(function(item) {
+        var listItem = document.createElement("li");
+        listItem.textContent = "ID: " + item.id + ", Number: " + item.number;
+        dataList.appendChild(listItem);
+    });
+}
+
+</script> -->
+
+
+<!-- <script>
+    var eventSource = new EventSource("{% url 'stream_data' %}");
+
+// Initialize an array to store all the data
+var allData = [];
+
+eventSource.onmessage = function(event) {
+    var newData = JSON.parse(event.data);
+    console.log(newData);
+
+    // Add the new data to the array
+    // allData.push(newData);
+    allData = allData.concat(newData);
+
+    // Update the HTML to display all the data
+    updateHTML(allData);
+};
+
+// Function to update the HTML with all the data
+function updateHTML(data) {
+    var dataList = document.getElementById("data-container");
+    dataList.innerHTML = ""; // Clear the existing list
+
+    // Iterate over the data and add each item to the list
+    data.forEach(function(item) {
+        var listItem = document.createElement("li");
+        listItem.textContent = "ID: " + item.id + ", Number: " + item.number;
+        dataList.appendChild(listItem);
+    });
+}
+
+</script> -->
+
+
+<!-- <script>
+    // Function to handle the streaming data
+    function handleStreamData(event) {
+        const dataContainer = document.getElementById('data-container');
+        const newData = JSON.parse(event.data);
+        
+        // Clear existing data
+        dataContainer.innerHTML = '';
+
+        // const listItem = document.createElement('li');
+        // listItem.textContent = `ID: ${newData.id}, Number: ${newData.number}`;
+        // dataContainer.appendChild(listItem);
+        
+        // Append new data to the container
+        newData.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `ID: ${item.id}, Number: ${item.number}`;
+            dataContainer.appendChild(listItem);
+        });
+    }
+
+    // Create an EventSource object to receive streaming data from the server
+    const eventSource = new EventSource('/stream-data/');
+
+    // Add an event listener to handle incoming data
+    eventSource.addEventListener('message', handleStreamData);
+</script> -->
+
+
+<!-- <script>
     function updateData() {
       fetch('/my_view')  // Replace with your actual URL
         .then(response => response.text())
@@ -45,9 +243,9 @@
     }
   
     // setInterval(updateData, 5000); // Update every 5 seconds
-  </script>
+  </script> -->
 
-<script>
+<!-- <script>
     function handleStreamingData() {
         fetch('/stream-data')
          .then(response => response.text())
@@ -64,5 +262,5 @@
             // $('#data-list').append(event + '&ensp;');  // Update UI with data
         }
     setInterval(handleStreamingData, 3000);
-</script>
+</script> -->
 {% endblock %}
