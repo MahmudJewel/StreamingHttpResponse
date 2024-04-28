@@ -22,7 +22,9 @@ def stream_data(request):
     def stream_data_generator():
         queryset = TestModel.objects.all()
         for obj in queryset:
-            yield json.dumps({'id': obj.id, 'number': str(obj.number)})
+            json_data = json.dumps({'id': obj.id, 'number': str(obj.number)})
+            print('json data =====>', json_data)
+            yield json_data
 
     response = StreamingHttpResponse(stream_data_generator(), content_type='application/json')
     response['Cache-Control'] = 'no-cache'

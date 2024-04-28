@@ -22,7 +22,7 @@
         fetch('/stream-data')
          .then(response => response.text())
          .then(data => {
-            console.log('=========>',data);
+            console.log('=========>',typeof(data));
             let jsonArray = "["
             jsonArray += data.replace(/}{/g, "},{");
             jsonArray += "]";
@@ -35,8 +35,10 @@
         function displayData(jsonData) {
         let dataList = '';
         jsonData.forEach(function(data){
+            var id = data.id;
             var number = data.number;
-            dataList += number + "&ensp;";
+            dataList += id + "&nbsp;";
+            dataList += number + "&emsp;";
             console.log('==============>',number);
         });
         document.getElementById('data-list').innerHTML = dataList;
