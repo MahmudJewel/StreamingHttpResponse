@@ -17,26 +17,16 @@ def home(request):
     }
     return render(request, template_name, context)
 
-# def stream_data(request):
-#     def stream_data_generator():
-#         queryset = TestModel.objects.all()
-#         data = []
-#         for obj in queryset:
-#             id = obj.id
-#             number = str(obj.number)
-#             data.append({'id': id, 'number': number})
-#             # json_data = json.dumps(data)
-#             # # print('ok ==>', obj.number)
-#             # yield json_data
-#         json_data = json.dumps(data)
-#         yield json_data
-#         # data = list(TestModel.objects.values())
-#         # data = JsonResponse(data, safe=False)
-#         # yield data
+# json===============
+def stream_data(request):
+    def stream_data_generator():
+        queryset = TestModel.objects.all()
+        for obj in queryset:
+            yield json.dumps({'id': obj.id, 'number': str(obj.number)})
 
-#     response = StreamingHttpResponse(stream_data_generator(), content_type='text/event-stream')
-#     # response = StreamingHttpResponse(stream_data_generator(), content_type="application/json")
-#     return response
+    response = StreamingHttpResponse(stream_data_generator(), content_type='application/json')
+    response['Cache-Control'] = 'no-cache'
+    return response
 
 
 # text/event-stream
@@ -50,73 +40,10 @@ def home(request):
 #     response['Cache-Control'] = 'no-cache'
 #     return response
 
-# json===============
-def stream_data(request):
-    def stream_data_generator():
-        queryset = TestModel.objects.all()
-        for obj in queryset:
-            yield json.dumps({'id': obj.id, 'number': str(obj.number)})
-
-    response = StreamingHttpResponse(stream_data_generator(), content_type='application/json')
-    response['Cache-Control'] = 'no-cache'
-    return response
-
-
-
-# ===================generate time =============
-# def generate_data():
-#     # Example function to generate data periodically
-#     while True:
-#         # Generate some data
-#         data = {'timestamp': time.time(), 'value': 42}
-
-#         # Yield the data
-#         yield json.dumps(data) + '\n'
-
-#         # Wait for one minute before generating the next data
-#         time.sleep(60)
-
-# def stream_data(request):
-#     # Define a generator function to stream generated data
-#     def data_generator():
-#         yield from generate_data()
-
-#     # Create a StreamingHttpResponse with the generator function
-#     # response = StreamingHttpResponse(data_generator(), content_type='application/json')
-#     response = StreamingHttpResponse(data_generator(), content_type='text/event-stream')
-#     return response
-
-def my_view(request):
-    def generate_data():
-        for i in range(100000):
-            print('data==========> ', i)
-            # time.sleep(10)
-            yield f"Chunk {i}\n"  # Replace with your data generation logic
-
-    response = StreamingHttpResponse(generate_data(), content_type="text/plain")
-    return response
-
-def astreaming(_):
-    async def stream():
-        for i in range(10):
-            await asyncio.sleep(5)
-            yield f"Chunk: {i}\n".encode()
-
-    return StreamingHttpResponse(stream())
-
-# def get_data_dynamically(request):
-#       def get_object():
-#         queryset = TestModel.objects.all()
-#         for item in queryset.iterator():
-#              yield json.dumps({'number':item.number})
-#         return StreamingHttpResponse(get_object(),content_type='application/json')
-
 def save_test_model():
     num = random.random()
     TestModel.objects.create(number=num)
     print('Auto saved on model=================> ',num)
-
-
 
 # ================ start schedular ================ 
 def run_scheduler():
