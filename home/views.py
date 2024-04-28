@@ -61,6 +61,31 @@ def stream_data(request):
     response['Cache-Control'] = 'no-cache'
     return response
 
+
+
+# ===================generate time =============
+# def generate_data():
+#     # Example function to generate data periodically
+#     while True:
+#         # Generate some data
+#         data = {'timestamp': time.time(), 'value': 42}
+
+#         # Yield the data
+#         yield json.dumps(data) + '\n'
+
+#         # Wait for one minute before generating the next data
+#         time.sleep(60)
+
+# def stream_data(request):
+#     # Define a generator function to stream generated data
+#     def data_generator():
+#         yield from generate_data()
+
+#     # Create a StreamingHttpResponse with the generator function
+#     # response = StreamingHttpResponse(data_generator(), content_type='application/json')
+#     response = StreamingHttpResponse(data_generator(), content_type='text/event-stream')
+#     return response
+
 def my_view(request):
     def generate_data():
         for i in range(100000):
@@ -100,5 +125,6 @@ def run_scheduler():
 		time.sleep(1)
 
 # schedule.every(1).minutes.do(save_test_model)
+schedule.every(10).seconds.do(save_test_model)
 threading.Thread(target=run_scheduler).start()
 # ================== end schedular ================

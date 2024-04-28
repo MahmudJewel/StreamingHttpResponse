@@ -1,43 +1,17 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<section>
+<section class="container">
     <div >
         <h2 class="text-center">StreamingHttpResponse</h2>
-        <p>Testing</p>
+        <ul>
+            <li>New data saved in database in every 10 seconds</li>
+            <li>The updated data will be presented here dynamically</li>
+        </ul>
     </div>
     <hr>
-    <!-- <h2>Django-data</h2>
-    <div>
-        {% for dt in data %}
-        {{dt.number}} &ensp;
-        {% endfor %}
-    </div> -->
-
-    <!-- <br><br>
-    <h2>================</h2>
-    <div id="progress"></div>
-    <div id="data"></div> -->
-
-    <!-- <br><br>
-    <h2>StreamingHttpResponse data</h2>
-    <div class="container">
-        <ul id="data-list"></ul>
-    </div>
-
-    <br><br>
-    <h2>Demo data</h2>
-    <div id="data-container"></div> -->
-
-    <!-- predefined data/text -->
-    <!-- <h2>Streaming Data from Server</h2>
-    <div id="progress"></div>
-    <div id="data"></div> -->
-
-     <!-- json -->
      <h2>Streaming Data from Server</h2>
      <div id="data-list"></div>
-
 </section>
 
 <!-- ====================== -->
@@ -78,27 +52,60 @@
     xmlhttp.send();
 </script> -->
 
-
+<!-- json -->
 <script>
     function handleStreamingData() {
         fetch('/stream-data')
          .then(response => response.text())
          .then(data => {
-            // var dt = JSON.parse(data);
-            console.log('=========>',typeof(data));
-            document.getElementById('data-list').innerHTML = data;
-            // data.forEach(function(jsonData){
-            //     var number = jsonData.number;
-            //     console.log('==============>',number);
-            // });
+            console.log('=========>',data);
+            let jsonArray = "["
+            jsonArray += data.replace(/}{/g, "},{");
+            jsonArray += "]";
+            const jsonData = JSON.parse(jsonArray);
+            console.log('=============>',jsonData);
+            displayData(jsonData);
           });
-            // var data = JSON.parse(event);  // Parse JSON data
-            // $('#data-list').append(event + '&ensp;');  // Update UI with data
         }
-    setInterval(handleStreamingData, 3000);
+
+        function displayData(jsonData) {
+        let dataList = '';
+        jsonData.forEach(function(data){
+            var number = data.number;
+            dataList += number + "&ensp;";
+            console.log('==============>',number);
+        });
+        document.getElementById('data-list').innerHTML = dataList;
+    }
+
+    handleStreamingData();
+    setInterval(handleStreamingData, 10000);
 </script>
 
 
+<!-- time and value =========== -->
+<!-- <script>
+    // Function to handle incoming streamed data
+    function handleStreamedData(event) {
+        // Parse the JSON data
+        var data = JSON.parse(event.data);
+
+        // Update the DOM to display the streamed data
+        var container = document.getElementById('data-container');
+        container.innerHTML += '<p>' + JSON.stringify(data) + '</p>';
+    }
+
+    // Establish connection to the streaming endpoint
+    var source = new EventSource('{% url "stream_data" %}');
+
+    // Listen for streamed data events
+    source.addEventListener('message', handleStreamedData);
+
+    // Handle errors
+    source.addEventListener('error', function(event) {
+        console.error('Error:', event);
+    });
+</script> -->
 
 <!-- =================================== -->
 <!-- <script>
