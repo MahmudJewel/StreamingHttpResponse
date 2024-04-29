@@ -30,7 +30,9 @@ session operates in a virtual environment set up by `virtualenv`.
 
 Then run
 ```sh
-$ python manage.py runserver
+(venv)$ python manage.py makemigrations
+(venv)$ python manage.py migrate
+(venv)$ python manage.py runserver
 ```
 
 ### Happy Coding
