@@ -1,5 +1,19 @@
 # StreamingHttpResponse in Django
 <p>
+    <a href="https://github.com/MahmudJewel/StreamingHttpResponse">
+        <img src="https://img.shields.io/github/forks/MahmudJewel/StreamingHttpResponse.svg?style=social&label=Fork" />
+    </a>
+    <a href="https://github.com/MahmudJewel/StreamingHttpResponse/fork">
+        <img src="https://img.shields.io/github/stars/MahmudJewel/StreamingHttpResponse.svg?style=social&label=Stars" />
+    </a>
+</p>
+
+<a href="https://github.com/MahmudJewel/StreamingHttpResponse/fork">
+    Click here to clone/fork the repository
+</a>
+
+<!--  ========================== --> <br>
+<p>
     A StreamingHttpResponse is a response whose body is sent to the client in multiple pieces, or “chunks.” <br>
     On the other hand, HttpResponse is used to return a complete HTTP response with a fixed content or single piece.
 </p>
